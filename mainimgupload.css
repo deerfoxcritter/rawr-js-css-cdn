@@ -1,0 +1,329 @@
+/* ============================================
+   RAWR RECORD FORM STYLES
+   Custom artwork submission form for rawr.ly
+   ============================================ */
+
+.rawrRecordForm {
+	--bg-primary: #1a1a1d;
+	--bg-secondary: #232328;
+	--bg-tertiary: #2a2a30;
+	--bg-elevated: #313138;
+	--text-primary: #e8e8ea;
+	--text-secondary: #a0a0a8;
+	--text-muted: #6b6b75;
+	--accent: #9b7be8;
+	--accent-hover: #b095f5;
+	--accent-soft: rgba(155, 123, 232, 0.15);
+	--accent-glow: rgba(155, 123, 232, 0.3);
+	--border: #3a3a42;
+	--success: #5cb85c;
+	--danger: #d9534f;
+	--danger-soft: rgba(217, 83, 79, 0.15);
+	
+	font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 40px 24px 80px;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+.rawrRecordForm__header {
+	margin-bottom: 32px;
+	text-align: center;
+}
+
+.rawrRecordForm__title {
+	font-family: 'Space Grotesk', sans-serif;
+	font-size: 2rem;
+	font-weight: 700;
+	margin-bottom: 8px;
+	background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
+
+.rawrRecordForm__subtitle {
+	color: var(--text-secondary);
+	font-size: 0.95rem;
+	margin: 0;
+}
+
+/* ============================================
+   PROGRESS STEPS
+   ============================================ */
+.rawrRecordForm__progress {
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	margin-bottom: 40px;
+}
+
+.rawrRecordForm__step {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 16px;
+	background: var(--bg-secondary);
+	border-radius: 20px;
+	font-size: 0.85rem;
+	color: var(--text-muted);
+}
+
+.rawrRecordForm__step--active {
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+
+.rawrRecordForm__stepNumber {
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	background: var(--bg-tertiary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-weight: 700;
+	font-size: 0.75rem;
+}
+
+.rawrRecordForm__step--active .rawrRecordForm__stepNumber {
+	background: var(--accent);
+	color: var(--bg-primary);
+}
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+.rawrRecordForm__section {
+	background: var(--bg-secondary);
+	border-radius: 16px;
+	padding: 28px;
+	margin-bottom: 20px;
+	border: 1px solid var(--border);
+}
+
+.rawrRecordForm__section:focus-within {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.rawrRecordForm__sectionHeader {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 24px;
+}
+
+.rawrRecordForm__sectionIcon {
+	width: 40px;
+	height: 40px;
+	border-radius: 10px;
+	background: var(--accent-soft);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--accent);
+	flex-shrink: 0;
+}
+
+.rawrRecordForm__sectionIcon svg {
+	width: 20px;
+	height: 20px;
+}
+
+.rawrRecordForm__sectionIcon--warning {
+	background: var(--danger-soft);
+	color: var(--danger);
+}
+
+.rawrRecordForm__sectionTitle {
+	font-family: 'Space Grotesk', sans-serif;
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: var(--text-primary);
+	margin: 0;
+}
+
+.rawrRecordForm__sectionSubtitle {
+	font-size: 0.85rem;
+	color: var(--text-muted);
+	margin: 4px 0 0 0;
+}
+
+.rawrRecordForm__sectionFields {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+/* ============================================
+   FORM FIELDS - BASE
+   ============================================ */
+.rawrRecordForm .ipsFieldRow {
+	background: transparent !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	border: none !important;
+}
+
+.rawrRecordForm .ipsFieldRow__label {
+	display: block;
+	font-weight: 600;
+	font-size: 0.9rem;
+	margin-bottom: 8px;
+	color: var(--text-primary);
+}
+
+.rawrRecordForm .ipsFieldRow__required {
+	color: var(--danger);
+}
+
+.rawrRecordForm .ipsFieldRow__desc {
+	font-size: 0.8rem;
+	color: var(--text-muted);
+	margin-top: 6px;
+}
+
+/* ============================================
+   FORM INPUTS
+   ============================================ */
+.rawrRecordForm input[type="text"],
+.rawrRecordForm input[type="search"],
+.rawrRecordForm textarea,
+.rawrRecordForm select {
+	width: 100%;
+	padding: 14px 16px;
+	background: var(--bg-tertiary);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	color: var(--text-primary);
+	font-family: inherit;
+	font-size: 0.95rem;
+}
+
+.rawrRecordForm input:focus,
+.rawrRecordForm textarea:focus,
+.rawrRecordForm select:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.rawrRecordForm textarea {
+	min-height: 100px;
+	resize: vertical;
+}
+
+/* ============================================
+   DATABASE RELATIONAL FIELDS FIX
+   (Artist & Fursonas Shown)
+   ============================================ */
+.rawrRecordForm [data-ipsAutocomplete],
+.rawrRecordForm .ipsField_autocomplete {
+	display: block;
+	width: 100%;
+}
+
+.rawrRecordForm [data-ipsAutocomplete] input[type="text"],
+.rawrRecordForm [data-ipsAutocomplete] input[type="search"],
+.rawrRecordForm input[id*="_dummyInput"] {
+	width: 100% !important;
+	min-width: 100% !important;
+	min-height: 48px !important;
+	padding: 14px 16px !important;
+	padding-left: 16px !important;
+	text-indent: 0 !important;
+	background: var(--bg-tertiary) !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 10px !important;
+	color: var(--text-primary) !important;
+	font-family: inherit !important;
+	font-size: 0.95rem !important;
+	box-sizing: border-box !important;
+	-webkit-text-fill-color: var(--text-primary) !important;
+}
+
+.rawrRecordForm [data-ipsAutocomplete] input,
+.rawrRecordForm input[id*="_dummyInput"] {
+	text-overflow: clip !important;
+	overflow: visible !important;
+}
+
+.rawrRecordForm [data-ipsAutocomplete] input,
+.rawrRecordForm [data-ipsAutocomplete] input:focus,
+.rawrRecordForm input[id*="_dummyInput"],
+.rawrRecordForm input[id*="_dummyInput"]:focus {
+	transition: none !important;
+	-webkit-transition: none !important;
+	animation: none !important;
+	-webkit-animation: none !important;
+}
+
+.rawrRecordForm [data-ipsAutocomplete] input:focus,
+.rawrRecordForm input[id*="_dummyInput"]:focus {
+	outline: none !important;
+	border-color: var(--accent) !important;
+	box-shadow: 0 0 0 3px var(--accent-soft) !important;
+}
+
+.rawrRecordForm .ipsAutocomplete,
+.rawrRecordForm [data-role="tokenList"] {
+	display: block !important;
+	width: 100% !important;
+	background: var(--bg-tertiary) !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 10px !important;
+	padding: 8px !important;
+	min-height: 52px !important;
+	box-sizing: border-box !important;
+}
+
+.rawrRecordForm .ipsAutocomplete:focus-within,
+.rawrRecordForm [data-role="tokenList"]:focus-within {
+	border-color: var(--accent) !important;
+	box-shadow: 0 0 0 3px var(--accent-soft) !important;
+}
+
+.rawrRecordForm [data-role="tokenList"] input[type="text"],
+.rawrRecordForm [data-role="tokenList"] input[id*="_dummyInput"] {
+	border: none !important;
+	background: transparent !important;
+	box-shadow: none !important;
+	padding: 6px 8px !important;
+	min-height: 32px !important;
+}
+
+.rawrRecordForm [data-role="tokenList"] input:focus {
+	border: none !important;
+	box-shadow: none !important;
+}
+
+/* Autocomplete dropdown results */
+.rawrRecordForm .ipsAutocompleteMenu,
+.rawrRecordForm .ipsAutocomplete_resultsWrapper {
+	background: var(--bg-elevated) !important;
+	border: 1px solid var(--border) !important;
+	border-radius: 10px !important;
+	margin-top: 4px !important;
+	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* ============================================
+   SELECTED TOKENS (Pills)
+   ============================================ */
+.rawrRecordForm .cToken,
+.rawrRecordForm .ipsAutocomplete_token {
+	display: inline-flex !important;
+	align-items: center !important;
+	gap: 8px !important;
+	background: var(--accent-soft) !important;
+	color: var(--accent) !important;
+	border-radius: 8px !important;
+	padding: 8px 12px !important;
+	font-size: 0.9rem !important;
+	font-weight: 500 !important;
+	margin: 4px !important;
+	bo
