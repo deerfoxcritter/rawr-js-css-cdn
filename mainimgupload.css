@@ -1,4 +1,28 @@
 /* ============================================
+   SVG SIZE CONSTRAINTS
+   ============================================ */
+.rawrRecordForm svg {
+	max-width: 100%;
+	height: auto;
+}
+
+.rawrRecordForm__sectionIcon svg {
+	width: 20px !important;
+	height: 20px !important;
+	max-width: 20px !important;
+	max-height: 20px !important;
+}
+
+.rawrRecordForm__sidebar svg,
+.rawrRecordForm__sidebarHeader svg {
+	width: 18px !important;
+	height: 18px !important;
+	max-width: 18px !important;
+	max-height: 18px !important;
+	flex-shrink: 0;
+}
+
+/* ============================================
    RAWR RECORD FORM STYLES
    Custom artwork submission form for rawr.ly
    ============================================ */
