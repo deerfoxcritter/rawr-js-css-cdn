@@ -1,124 +1,34 @@
-/* Ensure the grid is hidden until JS sorts it to prevent jumping */
+/* --- GRID LAYOUT --- */
 .rawr-form-grid {
     display: grid;
-    grid-template-columns: 70% 28%;
+    grid-template-columns: 70% 28%; /* The 70/30 Split */
     gap: 2%;
     width: 100%;
     margin-top: 20px;
-    opacity: 0; /* JS will set this to 1 */
-    transition: opacity 0.3s ease;
+    align-items: start;
 }
 
-/* =========================================
-   1. MAIN LAYOUT (The 70/30 Grid)
-   ========================================= */
-.rawr-form-grid {
-    display: grid;
-    grid-template-columns: 70% 28%; /* 70% Left, 28% Right */
-    gap: 2%;
-    width: 100%;
-    margin-top: 25px;
-    
-    /* Smooth fade-in for JS mover */
-    opacity: 0; 
-    animation: rawrFadeIn 0.5s forwards;
-}
-
-@keyframes rawrFadeIn {
-    to { opacity: 1; }
-}
-
-.rawr-main-col {
-    min-width: 0; /* Prevents grid blowouts */
+.rawr-main-col, .rawr-side-col {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-width: 0;
 }
 
-.rawr-side-col {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Mobile: Stack vertically */
+@media screen and (max-width: 979px) {
+    .rawr-form-grid {
+        grid-template-columns: 1fr;
+    }
+    .rawr-side-col {
+        margin-top: 20px;
+    }
 }
 
-/* Field Spacing */
-.rawrField {
-    margin-bottom: 0; /* We use gap in flex container instead */
-    width: 100%;
-}
-
-
-/* =========================================
-   2. FANCY UPLOAD ZONE (Drag & Drop)
-   ========================================= */
-.rawr-upload-zone {
-    border: 2px dashed var(--theme-text_light); /* Uses IPS theme var */
-    border-radius: 12px;
-    padding: 40px 20px;
-    text-align: center;
-    background: var(--theme-area_background);
-    transition: all 0.2s ease;
-    position: relative;
-    
-    /* Center Content */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 220px;
-    cursor: pointer;
-}
-
-.rawr-upload-zone:hover {
-    border-color: var(--theme-brand_primary);
-    background: var(--theme-area_background_reset);
-}
-
-.rawr-upload-zone.is-dragging {
-    border-color: var(--theme-brand_primary);
-    background: rgba(var(--theme-brand_primary_rgb), 0.05); /* 5% tint */
-    transform: scale(1.01);
-}
-
-.rawr-upload-zone.has-file {
-    border-style: solid;
-    border-color: #4ade80; /* Green success border */
-    background: rgba(74, 222, 128, 0.05);
-}
-
-.rawr-upload-icon {
-    color: var(--theme-text_light);
-    margin-bottom: 15px;
-    transition: color 0.2s ease;
-}
-
-.rawr-upload-zone:hover .rawr-upload-icon {
-    color: var(--theme-brand_primary);
-}
-
-.rawr-upload-text {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 1.1em;
-    color: var(--theme-text_color);
-}
-
-.rawr-upload-filename {
-    margin-top: 15px;
-    color: var(--theme-brand_primary);
-    font-weight: 700;
-    font-family: 'Nunito', sans-serif;
-    padding: 5px 10px;
-    background: var(--theme-area_background_reset);
-    border-radius: 6px;
-}
-
-
-/* =========================================
-   3. GENERAL STYLING (Headers & Buttons)
-   ========================================= */
+/* --- HEADER STYLES --- */
 .rawrRecordForm__header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--theme-area_background_reset);
 }
@@ -127,22 +37,46 @@
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
     font-size: 2.5rem;
-    color: var(--theme-text_color);
     margin: 0;
 }
 
 .rawrRecordForm__subtitle {
     font-family: 'Nunito', sans-serif;
     font-size: 1.1rem;
-    color: var(--theme-text_light);
+    opacity: 0.7;
     margin-top: 5px;
 }
 
-/* Submit Button */
+/* --- UPLOAD ZONE --- */
+.rawr-upload-zone {
+    border: 2px dashed var(--theme-text_light);
+    border-radius: 12px;
+    padding: 40px;
+    text-align: center;
+    background: var(--theme-area_background);
+    transition: all 0.2s ease;
+    position: relative;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 250px;
+}
+
+.rawr-upload-zone:hover, .rawr-upload-zone.ipsAttachment_dropZoneHover {
+    border-color: var(--theme-brand_primary);
+    background: var(--theme-area_background_reset);
+}
+
+.rawr-upload-icon {
+    color: var(--theme-text_light);
+    margin-bottom: 15px;
+}
+
+/* --- BUTTONS --- */
 .rawrRecordForm__actions {
     margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid var(--theme-area_background_reset);
     display: flex;
     justify-content: flex-end;
 }
@@ -152,40 +86,9 @@
     color: #fff;
     border: none;
     padding: 12px 32px;
-    border-radius: 50px; /* Pill shape */
+    border-radius: 50px;
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 600;
     font-size: 1.1rem;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.rawrRecordForm__btnPrimary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-}
-
-
-/* =========================================
-   4. RESPONSIVE (Mobile)
-   ========================================= */
-@media screen and (max-width: 979px) {
-    .rawr-form-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-    }
-
-    .rawr-side-col {
-        background: var(--theme-area_background_reset);
-        padding: 20px;
-        border-radius: 12px;
-    }
-    
-    .rawrRecordForm__title {
-        font-size: 2rem;
-    }
 }
