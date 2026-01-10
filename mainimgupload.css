@@ -1,3 +1,14 @@
+/* Ensure the grid is hidden until JS sorts it to prevent jumping */
+.rawr-form-grid {
+    display: grid;
+    grid-template-columns: 70% 28%;
+    gap: 2%;
+    width: 100%;
+    margin-top: 20px;
+    opacity: 0; /* JS will set this to 1 */
+    transition: opacity 0.3s ease;
+}
+
 /* =========================================
    1. MAIN LAYOUT (The 70/30 Grid)
    ========================================= */
