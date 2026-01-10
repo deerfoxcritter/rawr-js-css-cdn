@@ -1,384 +1,180 @@
-/* 70/30 Split Layout */
+/* =========================================
+   1. MAIN LAYOUT (The 70/30 Grid)
+   ========================================= */
 .rawr-form-grid {
     display: grid;
-    grid-template-columns: 7fr 3fr; /* 70% / 30% split */
-    gap: 24px;
+    grid-template-columns: 70% 28%; /* 70% Left, 28% Right */
+    gap: 2%;
     width: 100%;
+    margin-top: 25px;
+    
+    /* Smooth fade-in for JS mover */
+    opacity: 0; 
+    animation: rawrFadeIn 0.5s forwards;
+}
+
+@keyframes rawrFadeIn {
+    to { opacity: 1; }
 }
 
 .rawr-main-col {
-    background: var(--theme-area_background_reset); /* Optional: distinct background */
-    border-radius: 8px;
-    min-width: 0; /* Prevents flex/grid overflow issues */
+    min-width: 0; /* Prevents grid blowouts */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .rawr-side-col {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 15px;
 }
 
-/* Mobile: Stack them */
-@media (max-width: 979px) {
-    .rawr-form-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Clean up field spacing */
+/* Field Spacing */
 .rawrField {
-    margin-bottom: 20px;
-}
-/* ============================================
-   SVG SIZE CONSTRAINTS
-   ============================================ */
-.rawrRecordForm svg {
-	max-width: 100%;
-	height: auto;
+    margin-bottom: 0; /* We use gap in flex container instead */
+    width: 100%;
 }
 
-.rawrRecordForm__sectionIcon svg {
-	width: 20px !important;
-	height: 20px !important;
-	max-width: 20px !important;
-	max-height: 20px !important;
+
+/* =========================================
+   2. FANCY UPLOAD ZONE (Drag & Drop)
+   ========================================= */
+.rawr-upload-zone {
+    border: 2px dashed var(--theme-text_light); /* Uses IPS theme var */
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    background: var(--theme-area_background);
+    transition: all 0.2s ease;
+    position: relative;
+    
+    /* Center Content */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    cursor: pointer;
 }
 
-.rawrRecordForm__sidebar svg,
-.rawrRecordForm__sidebarHeader svg {
-	width: 18px !important;
-	height: 18px !important;
-	max-width: 18px !important;
-	max-height: 18px !important;
-	flex-shrink: 0;
+.rawr-upload-zone:hover {
+    border-color: var(--theme-brand_primary);
+    background: var(--theme-area_background_reset);
 }
 
-/* ============================================
-   RAWR RECORD FORM STYLES
-   Custom artwork submission form for rawr.ly
-   ============================================ */
-
-.rawrRecordForm {
-	--bg-primary: #1a1a1d;
-	--bg-secondary: #232328;
-	--bg-tertiary: #2a2a30;
-	--bg-elevated: #313138;
-	--text-primary: #e8e8ea;
-	--text-secondary: #a0a0a8;
-	--text-muted: #6b6b75;
-	--accent: #9b7be8;
-	--accent-hover: #b095f5;
-	--accent-soft: rgba(155, 123, 232, 0.15);
-	--accent-glow: rgba(155, 123, 232, 0.3);
-	--border: #3a3a42;
-	--success: #5cb85c;
-	--danger: #d9534f;
-	--danger-soft: rgba(217, 83, 79, 0.15);
-	
-	font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 40px 24px 80px;
+.rawr-upload-zone.is-dragging {
+    border-color: var(--theme-brand_primary);
+    background: rgba(var(--theme-brand_primary_rgb), 0.05); /* 5% tint */
+    transform: scale(1.01);
 }
 
-/* ============================================
-   HEADER
-   ============================================ */
+.rawr-upload-zone.has-file {
+    border-style: solid;
+    border-color: #4ade80; /* Green success border */
+    background: rgba(74, 222, 128, 0.05);
+}
+
+.rawr-upload-icon {
+    color: var(--theme-text_light);
+    margin-bottom: 15px;
+    transition: color 0.2s ease;
+}
+
+.rawr-upload-zone:hover .rawr-upload-icon {
+    color: var(--theme-brand_primary);
+}
+
+.rawr-upload-text {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.1em;
+    color: var(--theme-text_color);
+}
+
+.rawr-upload-filename {
+    margin-top: 15px;
+    color: var(--theme-brand_primary);
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    padding: 5px 10px;
+    background: var(--theme-area_background_reset);
+    border-radius: 6px;
+}
+
+
+/* =========================================
+   3. GENERAL STYLING (Headers & Buttons)
+   ========================================= */
 .rawrRecordForm__header {
-	margin-bottom: 32px;
-	text-align: center;
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--theme-area_background_reset);
 }
 
 .rawrRecordForm__title {
-	font-family: 'Space Grotesk', sans-serif;
-	font-size: 2rem;
-	font-weight: 700;
-	margin-bottom: 8px;
-	background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 100%);
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
-	background-clip: text;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: var(--theme-text_color);
+    margin: 0;
 }
 
 .rawrRecordForm__subtitle {
-	color: var(--text-secondary);
-	font-size: 0.95rem;
-	margin: 0;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    color: var(--theme-text_light);
+    margin-top: 5px;
 }
 
-/* ============================================
-   PROGRESS STEPS
-   ============================================ */
-.rawrRecordForm__progress {
-	display: flex;
-	justify-content: center;
-	gap: 8px;
-	margin-bottom: 40px;
+/* Submit Button */
+.rawrRecordForm__actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--theme-area_background_reset);
+    display: flex;
+    justify-content: flex-end;
 }
 
-.rawrRecordForm__step {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	padding: 8px 16px;
-	background: var(--bg-secondary);
-	border-radius: 20px;
-	font-size: 0.85rem;
-	color: var(--text-muted);
+.rawrRecordForm__btnPrimary {
+    background: var(--theme-brand_primary);
+    color: #fff;
+    border: none;
+    padding: 12px 32px;
+    border-radius: 50px; /* Pill shape */
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.rawrRecordForm__step--active {
-	background: var(--accent-soft);
-	color: var(--accent);
+.rawrRecordForm__btnPrimary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
 }
 
-.rawrRecordForm__stepNumber {
-	width: 22px;
-	height: 22px;
-	border-radius: 50%;
-	background: var(--bg-tertiary);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-weight: 700;
-	font-size: 0.75rem;
-}
 
-.rawrRecordForm__step--active .rawrRecordForm__stepNumber {
-	background: var(--accent);
-	color: var(--bg-primary);
-}
+/* =========================================
+   4. RESPONSIVE (Mobile)
+   ========================================= */
+@media screen and (max-width: 979px) {
+    .rawr-form-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
 
-/* ============================================
-   SECTIONS
-   ============================================ */
-.rawrRecordForm__section {
-	background: var(--bg-secondary);
-	border-radius: 16px;
-	padding: 28px;
-	margin-bottom: 20px;
-	border: 1px solid var(--border);
+    .rawr-side-col {
+        background: var(--theme-area_background_reset);
+        padding: 20px;
+        border-radius: 12px;
+    }
+    
+    .rawrRecordForm__title {
+        font-size: 2rem;
+    }
 }
-
-.rawrRecordForm__section:focus-within {
-	border-color: var(--accent);
-	box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.rawrRecordForm__sectionHeader {
-	display: flex;
-	align-items: center;
-	gap: 12px;
-	margin-bottom: 24px;
-}
-
-.rawrRecordForm__sectionIcon {
-	width: 40px;
-	height: 40px;
-	border-radius: 10px;
-	background: var(--accent-soft);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	color: var(--accent);
-	flex-shrink: 0;
-}
-
-.rawrRecordForm__sectionIcon svg {
-	width: 20px;
-	height: 20px;
-}
-
-.rawrRecordForm__sectionIcon--warning {
-	background: var(--danger-soft);
-	color: var(--danger);
-}
-
-.rawrRecordForm__sectionTitle {
-	font-family: 'Space Grotesk', sans-serif;
-	font-size: 1.1rem;
-	font-weight: 600;
-	color: var(--text-primary);
-	margin: 0;
-}
-
-.rawrRecordForm__sectionSubtitle {
-	font-size: 0.85rem;
-	color: var(--text-muted);
-	margin: 4px 0 0 0;
-}
-
-.rawrRecordForm__sectionFields {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-}
-
-/* ============================================
-   FORM FIELDS - BASE
-   ============================================ */
-.rawrRecordForm .ipsFieldRow {
-	background: transparent !important;
-	padding: 0 !important;
-	margin: 0 !important;
-	border: none !important;
-}
-
-.rawrRecordForm .ipsFieldRow__label {
-	display: block;
-	font-weight: 600;
-	font-size: 0.9rem;
-	margin-bottom: 8px;
-	color: var(--text-primary);
-}
-
-.rawrRecordForm .ipsFieldRow__required {
-	color: var(--danger);
-}
-
-.rawrRecordForm .ipsFieldRow__desc {
-	font-size: 0.8rem;
-	color: var(--text-muted);
-	margin-top: 6px;
-}
-
-/* ============================================
-   FORM INPUTS
-   ============================================ */
-.rawrRecordForm input[type="text"],
-.rawrRecordForm input[type="search"],
-.rawrRecordForm textarea,
-.rawrRecordForm select {
-	width: 100%;
-	padding: 14px 16px;
-	background: var(--bg-tertiary);
-	border: 1px solid var(--border);
-	border-radius: 10px;
-	color: var(--text-primary);
-	font-family: inherit;
-	font-size: 0.95rem;
-}
-
-.rawrRecordForm input:focus,
-.rawrRecordForm textarea:focus,
-.rawrRecordForm select:focus {
-	outline: none;
-	border-color: var(--accent);
-	box-shadow: 0 0 0 3px var(--accent-soft);
-}
-
-.rawrRecordForm textarea {
-	min-height: 100px;
-	resize: vertical;
-}
-
-/* ============================================
-   DATABASE RELATIONAL FIELDS FIX
-   (Artist & Fursonas Shown)
-   ============================================ */
-.rawrRecordForm [data-ipsAutocomplete],
-.rawrRecordForm .ipsField_autocomplete {
-	display: block;
-	width: 100%;
-}
-
-.rawrRecordForm [data-ipsAutocomplete] input[type="text"],
-.rawrRecordForm [data-ipsAutocomplete] input[type="search"],
-.rawrRecordForm input[id*="_dummyInput"] {
-	width: 100% !important;
-	min-width: 100% !important;
-	min-height: 48px !important;
-	padding: 14px 16px !important;
-	padding-left: 16px !important;
-	text-indent: 0 !important;
-	background: var(--bg-tertiary) !important;
-	border: 1px solid var(--border) !important;
-	border-radius: 10px !important;
-	color: var(--text-primary) !important;
-	font-family: inherit !important;
-	font-size: 0.95rem !important;
-	box-sizing: border-box !important;
-	-webkit-text-fill-color: var(--text-primary) !important;
-}
-
-.rawrRecordForm [data-ipsAutocomplete] input,
-.rawrRecordForm input[id*="_dummyInput"] {
-	text-overflow: clip !important;
-	overflow: visible !important;
-}
-
-.rawrRecordForm [data-ipsAutocomplete] input,
-.rawrRecordForm [data-ipsAutocomplete] input:focus,
-.rawrRecordForm input[id*="_dummyInput"],
-.rawrRecordForm input[id*="_dummyInput"]:focus {
-	transition: none !important;
-	-webkit-transition: none !important;
-	animation: none !important;
-	-webkit-animation: none !important;
-}
-
-.rawrRecordForm [data-ipsAutocomplete] input:focus,
-.rawrRecordForm input[id*="_dummyInput"]:focus {
-	outline: none !important;
-	border-color: var(--accent) !important;
-	box-shadow: 0 0 0 3px var(--accent-soft) !important;
-}
-
-.rawrRecordForm .ipsAutocomplete,
-.rawrRecordForm [data-role="tokenList"] {
-	display: block !important;
-	width: 100% !important;
-	background: var(--bg-tertiary) !important;
-	border: 1px solid var(--border) !important;
-	border-radius: 10px !important;
-	padding: 8px !important;
-	min-height: 52px !important;
-	box-sizing: border-box !important;
-}
-
-.rawrRecordForm .ipsAutocomplete:focus-within,
-.rawrRecordForm [data-role="tokenList"]:focus-within {
-	border-color: var(--accent) !important;
-	box-shadow: 0 0 0 3px var(--accent-soft) !important;
-}
-
-.rawrRecordForm [data-role="tokenList"] input[type="text"],
-.rawrRecordForm [data-role="tokenList"] input[id*="_dummyInput"] {
-	border: none !important;
-	background: transparent !important;
-	box-shadow: none !important;
-	padding: 6px 8px !important;
-	min-height: 32px !important;
-}
-
-.rawrRecordForm [data-role="tokenList"] input:focus {
-	border: none !important;
-	box-shadow: none !important;
-}
-
-/* Autocomplete dropdown results */
-.rawrRecordForm .ipsAutocompleteMenu,
-.rawrRecordForm .ipsAutocomplete_resultsWrapper {
-	background: var(--bg-elevated) !important;
-	border: 1px solid var(--border) !important;
-	border-radius: 10px !important;
-	margin-top: 4px !important;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* ============================================
-   SELECTED TOKENS (Pills)
-   ============================================ */
-.rawrRecordForm .cToken,
-.rawrRecordForm .ipsAutocomplete_token {
-	display: inline-flex !important;
-	align-items: center !important;
-	gap: 8px !important;
-	background: var(--accent-soft) !important;
-	color: var(--accent) !important;
-	border-radius: 8px !important;
-	padding: 8px 12px !important;
-	font-size: 0.9rem !important;
-	font-weight: 500 !important;
-	margin: 4px !important;
-	bo
