@@ -1,160 +1,109 @@
+document.addEventListener('DOMContentLoaded', function() {
+    initRawrForm();
+});
+
+function initRawrForm() {
+    const sourceContainer = document.getElementById('rawrOriginalFields');
+    const mainCol = document.getElementById('rawr-main-col');
+    const sideCol = document.getElementById('rawr-side-col');
+
+    // Safety check: if the containers don't exist, stop to prevent errors
+    if (!sourceContainer || !mainCol || !sideCol) {
+        console.warn('RawrForm: Missing required container elements.');
+        return;
+    }
+
+    // 1. MOVE THE FIELDS
+    // We convert the children to an array so the loop doesn't break as we move them
+    const fields = Array.from(sourceContainer.children);
+
+    fields.forEach(field => {
+        const fieldName = field.getAttribute('data-field-name') || '';
+        const fieldHTML = field.innerHTML.toLowerCase();
+        
+        // LOGIC: What goes in the Main (70%) Column?
+        // 1. Title
+        // 2. The Editor (Content)
+        // 3. The Image Upload (record_image)
+        // 4. Any field with "Rating" in the label
+        
+        const isTitle = fieldName === 'title';
+        const isEditor = fieldName === 'content';
+        const isUpload = fieldName.includes('record_image') || fieldHTML.includes('type="file"');
+        const isRating = fieldName.includes('rating') || fieldHTML.includes('rating') || fieldHTML.includes('content level');
+
+        if (isTitle || isEditor || isUpload || isRating) {
+            mainCol.appendChild(field);
+            
+            // If this is the upload field, initialize the fancy uploader
+            if (isUpload) {
+                initFancyUpload(field);
+            }
+        } else {
+            // Everything else (Tags, Categories, etc.) goes to Side Column
+            sideCol.appendChild(field);
+        }
+    });
+
+    // 2. CLEANUP
+    // Show the grid now that items are moved (prevents jumping)
+    document.querySelector('.rawr-form-grid').style.opacity = '1';
+}
+
 /**
- * RAWR Record Form
- * Custom artwork submission form for rawr.ly
+ * OPTIONAL: Converts the standard IPS file input into a nice drag-drop zone
  */
+function initFancyUpload(container) {
+    const fileInput = container.querySelector('input[type="file"]');
+    if (!fileInput) return;
 
-(function() {
-	'use strict';
+    // Create the visual wrapper
+    const wrapper = document.createElement('div');
+    wrapper.className = 'rawr-upload-zone';
+    wrapper.innerHTML = `
+        <div class="rawr-upload-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+        </div>
+        <div class="rawr-upload-text">
+            <strong>Drag & Drop Artwork</strong> or click to browse
+        </div>
+        <div class="rawr-upload-filename"></div>
+    `;
 
-	document.addEventListener('DOMContentLoaded', function() {
-		var sectionsContainer = document.getElementById('rawrSections');
-		var originalFields = document.getElementById('rawrOriginalFields');
-		
-		if (!sectionsContainer || !originalFields) return;
+    // Hide original input but keep it functional
+    fileInput.style.opacity = '0';
+    fileInput.style.position = 'absolute';
+    fileInput.style.width = '100%';
+    fileInput.style.height = '100%';
+    fileInput.style.top = '0';
+    fileInput.style.left = '0';
+    fileInput.style.zIndex = '10';
+    fileInput.style.cursor = 'pointer';
 
-		// ============================================
-		// SECTION CREATION
-		// ============================================
-		function createSection(id, icon, title, subtitle, iconClass) {
-			var section = document.createElement('section');
-			section.className = 'rawrRecordForm__section';
-			section.id = id;
-			section.innerHTML = 
-				'<div class="rawrRecordForm__sectionHeader">' +
-					'<div class="rawrRecordForm__sectionIcon ' + (iconClass || '') + '">' + icon + '</div>' +
-					'<div>' +
-						'<h2 class="rawrRecordForm__sectionTitle">' + title + '</h2>' +
-						'<p class="rawrRecordForm__sectionSubtitle">' + subtitle + '</p>' +
-					'</div>' +
-				'</div>' +
-				'<div class="rawrRecordForm__sectionFields"></div>';
-			return section;
-		}
+    // Insert wrapper and move input inside it
+    container.style.position = 'relative';
+    container.appendChild(wrapper);
+    wrapper.appendChild(fileInput);
 
-		// ============================================
-		// SVG ICONS
-		// ============================================
-		var icons = {
-			upload: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
-			edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
-			users: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-			shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
-			grid: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>'
-		};
+    // Add Event Listeners for interaction
+    fileInput.addEventListener('change', function() {
+        const fileNameDisplay = wrapper.querySelector('.rawr-upload-filename');
+        if (this.files && this.files.length > 0) {
+            fileNameDisplay.textContent = "Selected: " + this.files[0].name;
+            wrapper.classList.add('has-file');
+        }
+    });
 
-		// ============================================
-		// CREATE SECTIONS
-		// ============================================
-		var sections = [
-			createSection('section-artwork', icons.upload, 'Artwork', 'Upload your image or animation'),
-			createSection('section-details', icons.edit, 'Details', 'Tell us about your artwork'),
-			createSection('section-characters', icons.users, 'Characters Featured', 'Tag characters or fursonas in this artwork'),
-			createSection('section-rating', icons.shield, 'Content Rating', 'Help us classify your content appropriately', 'rawrRecordForm__sectionIcon--warning')
-		];
+    // Drag effects
+    ['dragenter', 'dragover'].forEach(eventName => {
+        fileInput.addEventListener(eventName, () => wrapper.classList.add('is-dragging'), false);
+    });
 
-		sections.forEach(function(s) {
-			sectionsContainer.appendChild(s);
-		});
-
-		// ============================================
-		// FIELD TO SECTION MAPPING
-		// ============================================
-		function getTargetSection(fieldName, labelText) {
-			labelText = (labelText || '').toLowerCase();
-			fieldName = (fieldName || '').toLowerCase();
-			
-			// Artwork section
-			if (labelText.includes('main image') || fieldName.includes('content_field_29')) return 'section-artwork';
-			if (labelText.includes('alternative') || fieldName.includes('content_field_19')) return 'section-artwork';
-			
-			// Rating section
-			if (labelText.includes('nsfw') || fieldName.includes('nsfw')) return 'section-rating';
-			
-			// Characters section
-			if (labelText.includes('fursona') || labelText.includes('artist') || 
-				fieldName.includes('content_field_18') || fieldName.includes('content_field_21')) {
-				return 'section-characters';
-			}
-			
-			// Default to details
-			return 'section-details';
-		}
-
-		// ============================================
-		// MOVE FIELDS TO SECTIONS
-		// ============================================
-		originalFields.querySelectorAll('.rawrField').forEach(function(fieldWrapper) {
-			var fieldName = fieldWrapper.dataset.field || '';
-			var labelEl = fieldWrapper.querySelector('.ipsFieldRow__label');
-			var labelText = labelEl ? labelEl.textContent : '';
-			var targetId = getTargetSection(fieldName, labelText);
-			var targetSection = document.getElementById(targetId);
-			
-			if (targetSection) {
-				var fieldsContainer = targetSection.querySelector('.rawrRecordForm__sectionFields');
-				while (fieldWrapper.firstChild) {
-					fieldsContainer.appendChild(fieldWrapper.firstChild);
-				}
-			}
-		});
-
-		// ============================================
-		// REMOVE EMPTY SECTIONS
-		// ============================================
-		sections.forEach(function(section) {
-			var fields = section.querySelector('.rawrRecordForm__sectionFields');
-			if (fields && fields.children.length === 0) {
-				section.remove();
-			}
-		});
-
-		originalFields.style.display = 'none';
-
-		// ============================================
-		// FIX AUTOCOMPLETE INPUT WIDTHS
-		// (IPS sets inline styles that override CSS)
-		// ============================================
-		function fixAutocompleteInputs() {
-			document.querySelectorAll('.rawrRecordForm input[id*="_dummyInput"]').forEach(function(input) {
-				input.style.setProperty('width', '100%', 'important');
-				input.style.setProperty('min-width', '100%', 'important');
-			});
-		}
-
-		// Run immediately
-		fixAutocompleteInputs();
-
-		// Run again after IPS initializes (may reinitialize inputs)
-		setTimeout(fixAutocompleteInputs, 100);
-		setTimeout(fixAutocompleteInputs, 500);
-		setTimeout(fixAutocompleteInputs, 1000);
-		setTimeout(fixAutocompleteInputs, 2000);
-
-		// ============================================
-		// MUTATION OBSERVER
-		// Watch for IPS resetting inline width styles
-		// ============================================
-		var observer = new MutationObserver(function(mutations) {
-			mutations.forEach(function(mutation) {
-				if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-					var target = mutation.target;
-					if (target.id && target.id.includes('_dummyInput')) {
-						target.style.setProperty('width', '100%', 'important');
-						target.style.setProperty('min-width', '100%', 'important');
-					}
-				}
-			});
-		});
-
-		// Observe all current and future autocomplete inputs
-		function observeAutocompleteInputs() {
-			document.querySelectorAll('.rawrRecordForm input[id*="_dummyInput"]').forEach(function(input) {
-				observer.observe(input, { attributes: true, attributeFilter: ['style'] });
-			});
-		}
-
-		observeAutocompleteInputs();
-		setTimeout(observeAutocompleteInputs, 500);
-		setTimeout(observeAutocompleteInputs, 1500);
-	});
-})();
+    ['dragleave', 'drop'].forEach(eventName => {
+        fileInput.addEventListener(eventName, () => wrapper.classList.remove('is-dragging'), false);
+    });
+}
